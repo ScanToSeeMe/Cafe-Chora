@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cafe Bar Menu</title>
+
+<style>
+:root {
+  --bg: #0f0f0f;
+  --accent: #c7a46d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  touch-action: pan-y;
+}
+
+body {
+  background: var(--bg);
+  font-family: system-ui, -apple-system, sans-serif;
+  color: white;
+  overflow: hidden;
+}
+
+.viewer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider {
+  display: flex;
+  height: 100%;
+  width: 300vw;
+  transition: transform 0.35s ease;
+}
+
+.slide {
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  cursor: grab;
+}
+
+.indicators {
+  position: fixed;
+  bottom: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #555;
+}
+
+.dot.active {
+  background: var(--accent);
+}
+</style>
+</head>
+
+<body>
+
+<div class="viewer">
+  <div class="slider" id="slider">
+    <div class="slide"><img src="image1.jpg" /></div>
+    <div class="slide"><img src="image2.jpg" /></div>
+    <div class="slide"><img src="image3.jpg" /></div>
+  </div>
+</div>
+
+<div class="indicators">
+  <div class="dot active"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+<script>
+const slider = document.getElementById("slider");
+const slides = document.querySelectorAll(".slide img");
+const dots = document.querySelectorAll(".dot");
+
+let index = 0;
+let startX = 0;
+let currentScale = 1;
+let isDragging = false;
+let lastTap = 0;
+
+function updateSlider() {
+  slider.style.transform = `translateX(-${index * 100}vw)`;
+  dots.forEach((d, i) => d.classList.toggle("active", i === index));
+  resetZoom();
+}
+
+function resetZoom() {
+  currentScale = 1;
+  slides.forEach(img => img.style.transform = "scale(1)");
+}
+
+slider.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+});
+
+slider.addEventListener("touchend", e => {
+  const endX = e.changedTouches[0].clientX;
+  const diff = startX - endX;
+
+  if (Math.abs(diff) > 50 && currentScale === 1) {
+    if (diff > 0 && index < slides.length - 1) index++;
+    if (diff < 0 && index > 0) index--;
+    updateSlider();
+  }
+});
+
+// Double tap zoom
+slides.forEach(img => {
+  img.addEventListener("touchend", e => {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      currentScale = currentScale === 1 ? 2 : 1;
+      img.style.transform = `scale(${currentScale})`;
+    }
+    lastTap = now;
+  });
+
+  // Drag when zoomed
+  let posX = 0, posY = 0, startDragX, startDragY;
+
+  img.addEventListener("touchstart", e => {
+    if (currentScale > 1) {
+      isDragging = true;
+      startDragX = e.touches[0].clientX - posX;
+      startDragY = e.touches[0].clientY - posY;
+    }
+  });
+
+  img.addEventListener("touchmove", e => {
+    if (!isDragging) return;
+    posX = e.touches[0].clientX - startDragX;
+    posY = e.touches[0].clientY - startDragY;
+    img.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
+  });
+
+  img.addEventListener("touchend", () => {
+    isDragging = false;
+  });
+});
+</script>
+
+</body>
+</html>
