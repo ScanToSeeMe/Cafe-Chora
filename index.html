@@ -1,170 +1,322 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cafe Bar Menu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Digital Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary: #222;
+            --accent: #d4a373; /* Ένα ζεστό γήινο χρώμα */
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --text-grey: #666;
+            --radius: 16px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
 
-<style>
-:root {
-  --bg: #0f0f0f;
-  --accent: #c7a46d;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Αφαιρεί το μπλε highlight στα κινητά */
+        }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  touch-action: pan-y;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            padding-bottom: 50px;
+        }
 
-body {
-  background: var(--bg);
-  font-family: system-ui, -apple-system, sans-serif;
-  color: white;
-  overflow: hidden;
-}
+        /* Header */
+        header {
+            padding: 20px;
+            text-align: center;
+            background: var(--card-bg);
+        }
+        
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        header p {
+            color: var(--text-grey);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
 
-.viewer {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+        /* Navigation Filters - Mobile Optimized */
+        .filter-container {
+            position: sticky;
+            top: 0;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-.slider {
-  display: flex;
-  height: 100%;
-  width: 300vw;
-  transition: transform 0.35s ease;
-}
+        .filter-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 0 20px;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+        }
 
-.slide {
-  width: 100vw;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
+        .filter-scroll::-webkit-scrollbar {
+            display: none; /* Hide scrollbar Chrome/Safari */
+        }
 
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform-origin: center;
-  transition: transform 0.3s ease;
-  cursor: grab;
-}
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-grey);
+        }
 
-.indicators {
-  position: fixed;
-  bottom: 16px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #555;
-}
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Default mobile: 1 column */
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-.dot.active {
-  background: var(--accent);
-}
-</style>
+        /* Για tablet και πάνω */
+        @media (min-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Menu Item Card */
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .item-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .item-content {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .item-desc {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            line-height: 1.5;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="viewer">
-  <div class="slider" id="slider">
-    <div class="slide"><img src="menu.jpeg" /></div>
-    <div class="slide"><img src="menu.jpeg" /></div>
-    <div class="slide"><img src="menu.jpeg" /></div>
-  </div>
-</div>
+    <header>
+        <h1>THE SPOT.</h1>
+        <p>All Day Bar & Resto</p>
+    </header>
 
-<div class="indicators">
-  <div class="dot active"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
-</div>
+    <nav class="filter-container">
+        <div class="filter-scroll" id="filter-wrapper">
+            <button class="filter-btn active" data-target="all">Όλα</button>
+            <button class="filter-btn" data-target="brunch">Brunch</button>
+            <button class="filter-btn" data-target="drinks">Drinks</button>
+            <button class="filter-btn" data-target="coffee">Coffee</button>
+            <button class="filter-btn" data-target="main">Κυρίως</button>
+            <button class="filter-btn" data-target="salads">Σαλάτες</button>
+            <button class="filter-btn" data-target="desserts">Γλυκά</button>
+            <button class="filter-btn" data-target="cocktails">Cocktails</button>
+        </div>
+    </nav>
 
-<script>
-const slider = document.getElementById("slider");
-const slides = document.querySelectorAll(".slide img");
-const dots = document.querySelectorAll(".dot");
+    <main class="menu-grid" id="menu-container">
 
-let index = 0;
-let startX = 0;
-let currentScale = 1;
-let isDragging = false;
-let lastTap = 0;
+        <div class="menu-item" data-category="brunch">
+            <img src="https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?w=600" alt="Pancakes" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Choco Pancakes</span>
+                    <span class="item-price">8.50€</span>
+                </div>
+                <p class="item-desc">Αφράτα pancakes με πραλίνα φουντουκιού, τριμμένο μπισκότο και φράουλες.</p>
+            </div>
+        </div>
 
-function updateSlider() {
-  slider.style.transform = `translateX(-${index * 100}vw)`;
-  dots.forEach((d, i) => d.classList.toggle("active", i === index));
-  resetZoom();
-}
+        <div class="menu-item" data-category="brunch">
+            <img src="https://images.unsplash.com/photo-1525351484163-7529414395d8?w=600" alt="Toast" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Avocado Toast</span>
+                    <span class="item-price">7.00€</span>
+                </div>
+                <p class="item-desc">Προζυμένιο ψωμί, κρέμα αβοκάντο, αυγό ποσέ και νιφάδες τσίλι.</p>
+            </div>
+        </div>
 
-function resetZoom() {
-  currentScale = 1;
-  slides.forEach(img => img.style.transform = "scale(1)");
-}
+        <div class="menu-item" data-category="coffee">
+            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600" alt="Freddo" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Freddo Espresso</span>
+                    <span class="item-price">3.20€</span>
+                </div>
+                <p class="item-desc">Premium χαρμάνι 100% Arabica.</p>
+            </div>
+        </div>
 
-slider.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
+        <div class="menu-item" data-category="main">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600" alt="Burger" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Classic Burger</span>
+                    <span class="item-price">11.00€</span>
+                </div>
+                <p class="item-desc">100% μοσχαρίσιος κιμάς, cheddar, μπέικον, μαρούλι, ντομάτα και σως.</p>
+            </div>
+        </div>
 
-slider.addEventListener("touchend", e => {
-  const endX = e.changedTouches[0].clientX;
-  const diff = startX - endX;
+        <div class="menu-item" data-category="salads">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600" alt="Salad" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Superfood Quinoa</span>
+                    <span class="item-price">9.50€</span>
+                </div>
+                <p class="item-desc">Κινόα, σπανάκι, ρόδι, καρύδια και dressing εσπεριδοειδών.</p>
+            </div>
+        </div>
 
-  if (Math.abs(diff) > 50 && currentScale === 1) {
-    if (diff > 0 && index < slides.length - 1) index++;
-    if (diff < 0 && index > 0) index--;
-    updateSlider();
-  }
-});
+        <div class="menu-item" data-category="cocktails">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600" alt="Cocktail" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Spicy Margarita</span>
+                    <span class="item-price">10.00€</span>
+                </div>
+                <p class="item-desc">Tequila Blanco, λάιμ, σιρόπι αγαύης και πιπεριά jalapeño.</p>
+            </div>
+        </div>
+        
+        <div class="menu-item" data-category="drinks">
+            <img src="https://images.unsplash.com/photo-1629245842816-c95a329ce1dc?w=600" alt="Beer" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Craft IPA</span>
+                    <span class="item-price">6.00€</span>
+                </div>
+                <p class="item-desc">Τοπική μικροζυθοποιία, 330ml.</p>
+            </div>
+        </div>
 
-// Double tap zoom
-slides.forEach(img => {
-  img.addEventListener("touchend", e => {
-    const now = Date.now();
-    if (now - lastTap < 300) {
-      currentScale = currentScale === 1 ? 2 : 1;
-      img.style.transform = `scale(${currentScale})`;
-    }
-    lastTap = now;
-  });
+         <div class="menu-item" data-category="desserts">
+            <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600" alt="Cake" class="item-image">
+            <div class="item-content">
+                <div class="item-header">
+                    <span class="item-title">Cheesecake</span>
+                    <span class="item-price">5.50€</span>
+                </div>
+                <p class="item-desc">Με σπιτική μαρμελάδα φρούτα του δάσους.</p>
+            </div>
+        </div>
 
-  // Drag when zoomed
-  let posX = 0, posY = 0, startDragX, startDragY;
+    </main>
 
-  img.addEventListener("touchstart", e => {
-    if (currentScale > 1) {
-      isDragging = true;
-      startDragX = e.touches[0].clientX - posX;
-      startDragY = e.touches[0].clientY - posY;
-    }
-  });
+    <script>
+        // --- JAVASCRIPT LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.filter-btn');
+            const menuItems = document.querySelectorAll('.menu-item');
 
-  img.addEventListener("touchmove", e => {
-    if (!isDragging) return;
-    posX = e.touches[0].clientX - startDragX;
-    posY = e.touches[0].clientY - startDragY;
-    img.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
-  });
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 1. Αφαίρεση της class 'active' από όλα τα κουμπιά
+                    buttons.forEach(b => b.classList.remove('active'));
+                    // 2. Προσθήκη 'active' στο κουμπί που πατήθηκε
+                    btn.classList.add('active');
 
-  img.addEventListener("touchend", () => {
-    isDragging = false;
-  });
-});
-</script>
+                    // 3. Λήψη της κατηγορίας
+                    const filterValue = btn.getAttribute('data-target');
 
+                    // 4. Φιλτράρισμα των αντικειμένων
+                    menuItems.forEach(item => {
+                        const itemCategory = item.getAttribute('data-category');
+                        
+                        if (filterValue === 'all' || filterValue === itemCategory) {
+                            item.classList.remove('hidden');
+                            // Μικρό τρικ για να ξαναπαίξει το animation
+                            item.style.animation = 'none';
+                            item.offsetHeight; /* trigger reflow */
+                            item.style.animation = 'fadeIn 0.5s ease';
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
