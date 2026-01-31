@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.filter-btn');
-    const menuItems = document.querySelectorAll('.menu-item');
+    const menuContainer = document.getElementById('menu-container');
 
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-
             buttons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             const filterValue = btn.dataset.target;
+            const menuItems = document.querySelectorAll('.menu-item');
 
             menuItems.forEach(item => {
                 const category = item.dataset.category;
