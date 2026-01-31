@@ -144,3 +144,40 @@ header p {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+
+
+.site-footer {
+    margin-top: 40px;
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 0.8rem; /* γενικό μέγεθος */
+    color: var(--text-grey);
+    opacity: 0.8;
+}
+
+.site-footer p {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-dot {
+    opacity: 0.4;
+}
+
+.footer-credit {
+    font-size: 0.7rem; /* μικρότερο για το credit */
+}
+
+.footer-credit a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.footer-credit a:hover {
+    text-decoration: underline;
+}
