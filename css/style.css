@@ -1,0 +1,146 @@
+:root {
+    --primary: #222;
+    --accent: #d4a373;
+    --bg: #fafafa;
+    --card-bg: #ffffff;
+    --text-grey: #666;
+    --radius: 16px;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--primary);
+    padding-bottom: 50px;
+}
+
+/* Header */
+header {
+    padding: 20px;
+    text-align: center;
+    background: var(--card-bg);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+header p {
+    color: var(--text-grey);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Filters */
+.filter-container {
+    position: sticky;
+    top: 0;
+    background: rgba(250,250,250,0.95);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.filter-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 0 20px;
+    scrollbar-width: none;
+}
+
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--text-grey);
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+/* Menu Grid */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Menu Item */
+.menu-item {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: fadeIn 0.5s ease;
+}
+
+.item-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.item-content {
+    padding: 15px;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-title {
+    font-weight: 600;
+}
+
+.item-price {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.item-desc {
+    font-size: 0.85rem;
+    color: var(--text-grey);
+    margin-top: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
