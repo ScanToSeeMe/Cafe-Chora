@@ -1,12 +1,12 @@
 const items = [
-    'items/choco-pancakes.html',
-    'items/avocado-toast.html',
-    'items/freddo-espresso.html',
-    'items/classic-burger.html',
-    'items/quinoa-salad.html',
-    'items/spicy-margarita.html',
-    'items/craft-ipa.html',
-    'items/cheesecake.html'
+    'items/toast.html',
+    'items/club-sandwich.html',
+    'items/ice-cream.html',
+    'items/waffles.html',
+    'items/ouzo.html',
+    'items/tsipouro.html',
+    'items/semi-sweet-beer.html',
+    'items/freddo-espresso.html'
 ];
 
 const container = document.getElementById('menu-container');
